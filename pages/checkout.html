@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Flower Shop - Checkout</title>
+    <!-- Link to shared CSS stylesheet -->
+    <link rel="stylesheet" href="/pages/styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h2>Checkout</h2>
+
+        <!-- Order Summary will be dynamically filled using JS -->
+        <div id="orderSummary" class="order-summary"></div>
+
+        <!-- Total Price display -->
+        <h3>Total: $<span id="totalPrice">0</span></h3>
+
+        <!-- Checkout Form: Name, Email, Address -->
+        <form id="checkoutForm">
+            <input type="text" id="name" placeholder="Full Name" required />
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="text" id="address" placeholder="Delivery Address" required />
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to display the order summary from cart items
+        function displayOrderSummary() {
+            // Retrieve cart from localStorage
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            const orderSummary = document.getElementById("orderSummary");
+            const totalPriceEl = document.getElementById("totalPrice");
+
+            orderSummary.innerHTML = ""; // Clear previous summary
+            let total = 0;
+
+            // Loop through each item in the cart
+            cart.forEach(item => {
+                total += item.price; // Add price to total
+
+                // Create a summary block for each item
+                const orderItem = document.createElement("div");
+                orderItem.classList.add("order-item");
+
+                orderItem.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Price: $${item.price}</p>
+                `;
+
+                // Append the item to the summary container
+                orderSummary.appendChild(orderItem);
+            });
+
+            // Update total price on the page
+            totalPriceEl.textContent = total;
+        }
+
+        // Event listener for form submission
+        document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            // Show order confirmation message
+            alert("Order placed successfully! Thank you for shopping with us.");
+
+            // Clear the cart from localStorage
+            localStorage.removeItem("cart");
+
+            // Redirect to flower list page
+            window.location.href = "flower-list.html";
+        });
+
+        // Call the function to populate the order summary on page load
+        displayOrderSummary();
+    </script>
+</body>
+</html>

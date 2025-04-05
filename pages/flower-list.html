@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Flower List</title>
+    <link rel="stylesheet" href="/pages/styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h2>Flower List</h2>
+
+        <!-- This container will hold all flower cards -->
+        <div id="flowerList" class="flower-container"></div>
+
+        <!-- Button to go to cart page -->
+        <button class="go-to-cart-btn" onclick="window.location.href='cart.html'">Go to Cart</button>
+    </div>
+
+    <script>
+     // Array of available flowers (can be dynamic later)
+    const flowers = [
+        { name: "Rose", price: 10, image: "../assets/rose.webp" },
+        { name: "Tulip", price: 12, image: "../assets/tulip.jpg" },
+        { name: "Lily", price: 15, image: "../assets/Lily.webp" },
+        { name: "Daisy", price: 8, image: "../assets/daisey.jpg" },
+        { name: "Orchid", price: 20, image: "../assets/orchaid.webp" },
+        { name: "Sunflower", price: 9, image: "../assets/sunflower.avif" },
+        { name: "Peony", price: 18, image: "../assets/peony.jpg" },
+        { name: "Marigold", price: 7, image: "../assets/marigold.webp" }
+    ];
+
+        
+        // Function to display all flowers on the page
+        function displayFlowers() {
+            const flowerList = document.getElementById("flowerList");
+            flowerList.innerHTML = ""; // Clear existing content
+
+            // Loop through each flower and create a card
+            flowers.forEach((flower, index) => {
+                const flowerCard = document.createElement("div");
+                flowerCard.classList.add("flower-card");
+
+                // Fill the card with flower image, name, price, and Add to Cart button
+                flowerCard.innerHTML = `
+                    <img src="${flower.image}" alt="${flower.name}" />
+                    <h3>${flower.name}</h3>
+                    <p>Price: $${flower.price}</p>
+                    <button onclick="addToCart(${index})">Add to Cart</button>
+                `;
+
+                // Append the card to the container
+                flowerList.appendChild(flowerCard);
+            });
+        }
+
+        // Function to add selected flower to the cart (stored in localStorage)
+        function addToCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || []; // Get existing cart or initialize empty array
+            cart.push(flowers[index]); // Add selected flower
+            localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart back to localStorage
+            alert(`${flowers[index].name} added to cart!`);
+        }
+
+        // Call function to load flower list when page loads
+        displayFlowers();
+    </script>
+</body>
+</html>

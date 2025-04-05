@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/pages/styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h2>Shopping Cart</h2>
+
+        <!-- Container for listing cart items -->
+        <div id="cartList" class="cart-container"></div>
+
+        <!-- Subtotal, Tax, and Total display -->
+        <h3>Subtotal: $<span id="subtotal">0</span></h3>
+        <h3>Tax (10%): $<span id="tax">0</span></h3>
+        <h3>Total: $<span id="totalPrice">0</span></h3>
+
+        <!-- Button to proceed to checkout -->
+        <button onclick="checkout()">Proceed to Checkout</button>
+    </div>
+
+    <script>
+        // Function to display cart items from localStorage
+        function displayCart() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || []; // Get cart items or initialize as empty array
+            const cartList = document.getElementById("cartList");
+            const subtotalEl = document.getElementById("subtotal");
+            const taxEl = document.getElementById("tax");
+            const totalPriceEl = document.getElementById("totalPrice");
+
+            cartList.innerHTML = ""; // Clear previous cart display
+            let subtotal = 0;
+
+            // Loop through each item in the cart and render it
+            cart.forEach((item, index) => {
+                subtotal += item.price; // Add to subtotal
+
+                // Create a div for each cart item
+                const cartItem = document.createElement("div");
+                cartItem.classList.add("cart-item");
+
+                // Add item name, price and remove button
+                cartItem.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Price: $${item.price}</p>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                `;
+
+                // Append the item to the cart list container
+                cartList.appendChild(cartItem);
+            });
+
+            // Calculate tax and total
+            let tax = subtotal * 0.1; // 10% tax
+            let total = subtotal + tax;
+
+            // Update UI values
+            subtotalEl.textContent = subtotal.toFixed(2);
+            taxEl.textContent = tax.toFixed(2);
+            totalPriceEl.textContent = total.toFixed(2);
+        }
+
+        // Function to remove an item from cart by index
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.splice(index, 1); // Remove the item at given index
+            localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart
+            displayCart(); // Refresh cart display
+        }
+
+        // Function to handle checkout button click
+        function checkout() {
+            const cart = JSON.parse(localStorage.getItem("cart"));
+            if (cart?.length > 0) {
+                // Redirect to checkout page if cart is not empty
+                window.location.href = "checkout.html";
+            } else {
+                // Alert user if cart is empty
+                alert("Your cart is empty!");
+            }
+        }
+
+        // Call displayCart on page load
+        displayCart();
+    </script>
+</body>
+</html>

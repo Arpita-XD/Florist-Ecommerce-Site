@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flower Shop - Register</title>
+  <link rel="stylesheet" href="/pages/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+      <input type="text" id="address" placeholder="Address (Optional)" />
+      <input type="text" id="city" placeholder="City (Optional)" />
+      <select id="province">
+        <option value="">Select Province (Optional)</option>
+        <option value="Ontario">Ontario</option>
+        <option value="Quebec">Quebec</option>
+        <option value="British Columbia">British Columbia</option>
+        <option value="Alberta">Alberta</option>
+      </select>
+      <input type="tel" id="phone" placeholder="Phone (123) 456-7890" required />
+      <input type="text" id="postalCode" placeholder="Postal Code (A1A 1A1)" required />
+      <input type="email" id="email" placeholder="Email (a@b.ca)" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    // Listen for form submission
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent page from refreshing
+
+      // Get form values
+      let firstName = document.getElementById('firstName').value;
+      let lastName = document.getElementById('lastName').value;
+      let address = document.getElementById('address').value;
+      let city = document.getElementById('city').value;
+      let province = document.getElementById('province').value;
+      let phone = document.getElementById('phone').value;
+      let postalCode = document.getElementById('postalCode').value;
+      let email = document.getElementById('email').value;
+      let password = document.getElementById('password').value;
+
+      // Define regex patterns for input validation
+      let phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+      let postalCodeRegex = /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/;
+      let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      // Validate phone format
+      if (!phoneRegex.test(phone)) {
+        alert('Invalid phone format. Use (123) 456-7890');
+        return;
+      }
+
+      // Validate postal code format
+      if (!postalCodeRegex.test(postalCode)) {
+        alert('Invalid postal code format. Use A1A 1A1');
+        return;
+      }
+
+      // Validate email format
+      if (!emailRegex.test(email)) {
+        alert('Invalid email format. Use a@b.ca');
+        return;
+      }
+
+      // Fetch existing users from localStorage
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+
+      // Add new user to the array
+      users.push({
+        firstName,
+        lastName,
+        address,
+        city,
+        province,
+        phone,
+        postalCode,
+        email,
+        password
+      });
+
+      // Save updated users array back to localStorage
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // Show success message and redirect to login page
+      alert('Registration successful! Redirecting to login page.');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
